@@ -59,6 +59,8 @@ class Compressor:
                 file.write(file_size.to_bytes(8, 'little'))
                 # Uncompressed CRC32 control sum
                 file.write(crc32_data.to_bytes(4, 'little'))
+                # Reserved bytes
+                file.write(b'\x00' * 4)
         
         except Exception as e:
             return f'Error: {e}'

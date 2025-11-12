@@ -24,15 +24,17 @@ class Decompress:
                 decompress_size = int.from_bytes(file.read(8), byteorder='little')
                 # CRC32 control sum
                 crc32 = int.from_bytes(file.read(4), byteorder='little')
+                # Reserved bytes
+                reserved = file.read(4)
 
-            return magic, version, decompress_size, crc32, mode, is_compress
+            return magic, version, decompress_size, crc32, mode, is_compress, reserved
         
         except Exception as e:
             return f'Error: {e}'
 
     def _read_file(self, file_path: str):
         try:
-            return np.memmap(file_path, dtype=np.uint8, mode='r')[19:]
+            return np.memmap(file_path, dtype=np.uint8, mode='r')[23:]
 
         except Exception as e:
             return f'Error: {e}'
@@ -72,10 +74,14 @@ class Decompress:
 
     def decompress_file(self, file_path: str, decompress_path: str):
         header_data = self._read_header(file_path)
+
+        # Check file exist
+        if not path.exists(file_path):
+            return 'File not exist'
+
         # Check magic number
         if header_data[0] != 'ABYS':
             return 'Incorrect magic number'
-        
         
         # Reading a compress file
         compress_data = self._read_file(file_path)
