@@ -11,11 +11,10 @@ class Compressor:
     
     @staticmethod
     @njit(fastmath=True, cache=True, nogil=True, looplift=True)
-    def _rle_compress(file_data: NDArray[np.uint8]):
+    def _rle_compress(file_data: NDArray[np.uint8], file_size: int):
         result = []
         i = 0
-        file_size = file_data.size
-
+        
         while i < file_size:
             # Sequence search
             run_length = 1
@@ -27,7 +26,7 @@ class Compressor:
                 result.extend([0xFF, run_length, file_data[i]])
                 i += run_length
                 continue
-            
+                
             # Escaping the nearest source bytes 0xFF
             for j in range(run_length):
                 val = file_data[i + j]
@@ -41,7 +40,7 @@ class Compressor:
         # Creating a NumPy array
         compressed = np.array(result, dtype=np.uint8)
 
-        return compressed if compressed.size < file_data.size else file_data
+        return compressed if compressed.size < file_size else file_data
     
     def _create_header(self, compress_path: str, file_size: str, crc32_data: int, is_compessed: bool):
         try:
@@ -81,9 +80,9 @@ class Compressor:
             # Calculating the CRC32
             crc32_data = crc32(file_data)
             # File compression
-            compress_file = self._rle_compress(file_data)
+            compress_file = self._rle_compress(file_data, file_size)
 
-            # Checking how effective the compression was
+            # Write the original data if compression is ineffectictive
             if compress_file.size >= file_size:
                 self._create_header(f'{compress_path}.tar.aby', file_size, crc32_data, False)
                 with open(f'{compress_path}.tar.aby', 'ab') as file:
@@ -101,3 +100,6 @@ class Compressor:
             
 
 compressor = Compressor()
+
+# "Cold start" protection
+compressor._rle_compress(np.array([0], dtype=np.uint8), 1)
