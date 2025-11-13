@@ -112,3 +112,6 @@ class Decompress:
 
 
 decompressor = Decompress()
+
+# "Cold start" protection
+decompressor._decompress(np.array([0], dtype=np.uint8), 1)
