@@ -11,33 +11,33 @@ class Decompress:
     def _read_header(self, file_path: str):
         try:
             # Reading the header
-            with open(file_path, 'rb') as file:
+            with open(file_path, "rb") as file:
                 # Magic number
                 magic = file.read(4).decode()
                 # Is the file compressed
-                is_compress = int.from_bytes(file.read(1), 'little')
+                is_compress = int.from_bytes(file.read(1), "little")
                 # Algoritm version
-                version = int.from_bytes(file.read(1), byteorder='little')
+                version = int.from_bytes(file.read(1), byteorder="little")
                 # Compression mode ( In development )
-                mode = int.from_bytes(file.read(1), byteorder='little')
+                mode = int.from_bytes(file.read(1), byteorder="little")
                 # size of the decompressed file
-                decompress_size = int.from_bytes(file.read(8), byteorder='little')
+                decompress_size = int.from_bytes(file.read(8), byteorder="little")
                 # CRC32 control sum
-                crc32 = int.from_bytes(file.read(4), byteorder='little')
+                crc32 = int.from_bytes(file.read(4), byteorder="little")
                 # Reserved bytes
                 reserved = file.read(4)
 
             return magic, version, decompress_size, crc32, mode, is_compress, reserved
         
         except Exception as e:
-            return f'Error: {e}'
+            return f"Error: {e}"
 
     def _read_file(self, file_path: str):
         try:
-            return np.memmap(file_path, dtype=np.uint8, mode='r')[23:]
+            return np.memmap(file_path, dtype=np.uint8, mode="r")[23:]
 
         except Exception as e:
-            return f'Error: {e}'
+            return f"Error: {e}"
     
     @staticmethod
     @njit(fastmath=True, cache=True, nogil=True, looplift=True, parallel=True)
@@ -77,11 +77,11 @@ class Decompress:
 
         # Check file exist
         if not path.exists(file_path):
-            return 'File not exist'
+            return "File not exist"
 
         # Check magic number
-        if header_data[0] != 'ABYS':
-            return 'Incorrect magic number'
+        if header_data[0] != "ABYS":
+            return "Incorrect magic number"
         
         # Reading a compress file
         compress_data = self._read_file(file_path)
@@ -89,11 +89,11 @@ class Decompress:
         # If the file is not compressed
         if header_data[5] == 0:
             try:
-                with open(decompress_path, 'wb') as file:
+                with open(decompress_path, "wb") as file:
                     file.write(compress_data)
                 
             except Exception as e:
-                return f'Error: {e}'
+                return f"Error: {e}"
         # Decompressing a compress file
         decompress_data = self._decompress(compress_data, header_data[2])
         # Calculating rc32 for unpacked data
@@ -101,14 +101,14 @@ class Decompress:
 
         # Checking the correctness of unpacking
         if decompress_crc32 != header_data[3]:
-            return 'Incorrect CRC32'
+            return "Incorrect CRC32"
             
         try:
-            with open(decompress_path, 'wb') as file:
+            with open(decompress_path, "wb") as file:
                 file.write(decompress_data)
                 
         except Exception as e:
-            return f'Error: {e}'
+            return f"Error: {e}"
 
 
 decompressor = Decompress()
