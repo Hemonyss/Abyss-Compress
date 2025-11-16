@@ -45,31 +45,31 @@ class Compressor:
     def _create_header(self, compress_path: str, file_size: str, crc32_data: int, is_compessed: bool):
         try:
             # Creating a header
-            with open(f'{compress_path}', 'wb') as file:
+            with open(f"{compress_path}", "wb") as file:
                 # Magic number
-                file.write(b'ABYS')
+                file.write(b"ABYS")
                 # Is compressed
                 file.write(bytes([is_compessed]))
                 # Algoritm version
-                file.write(self.version.to_bytes(1, 'little'))
+                file.write(self.version.to_bytes(1, "little"))
                 # Compression mode ( In development )
-                file.write(0x00.to_bytes(1, 'little'))
+                file.write(0x00.to_bytes(1, "little"))
                 # Uncompressed file size
-                file.write(file_size.to_bytes(8, 'little'))
+                file.write(file_size.to_bytes(8, "little"))
                 # Uncompressed CRC32 control sum
-                file.write(crc32_data.to_bytes(4, 'little'))
+                file.write(crc32_data.to_bytes(4, "little"))
                 # Reserved bytes
-                file.write(b'\x00' * 4)
+                file.write(b"\x00" * 4)
         
         except Exception as e:
-            return f'Error: {e}'
+            return f"Error: {e}"
     
     def _read_file(self, file_path: str):
         try:
-            return np.memmap(file_path, dtype=np.uint8, mode='r')
+            return np.memmap(file_path, dtype=np.uint8, mode="r")
             
         except Exception as e:
-            return f'Error: {e}'
+            return f"Error: {e}"
     
     def compress_file(self, file_path: str, compress_path: str):
         try:
@@ -84,19 +84,19 @@ class Compressor:
 
             # Write the original data if compression is ineffectictive
             if compress_file.size >= file_size:
-                self._create_header(f'{compress_path}.tar.aby', file_size, crc32_data, False)
-                with open(f'{compress_path}.tar.aby', 'ab') as file:
+                self._create_header(f"{compress_path}.tar.aby", file_size, crc32_data, False)
+                with open(f"{compress_path}.tar.aby", "ab") as file:
                     file.write(file_data)
 
                 return 1
 
             # Writing the header and data
-            self._create_header(f'{compress_path}.tar.aby', file_size, crc32_data, True)
-            with open(f'{compress_path}.tar.aby', 'ab') as file:
+            self._create_header(f"{compress_path}.tar.aby", file_size, crc32_data, True)
+            with open(f"{compress_path}.tar.aby", "ab") as file:
                 file.write(compress_file)
 
         except Exception as e:
-            return f'Error: {e}'
+            return f"Error: {e}"
             
 
 compressor = Compressor()
