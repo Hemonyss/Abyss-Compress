@@ -1,12 +1,12 @@
-import flet as ft
 from src.algoritm import *
+import flet as ft
 
 def main(page: ft.Page):
     page.title = "Abyss compress"
     page.window.width = 500
     page.window.height = 700
-    page.window.min_width = 500
-    page.window.min_height = 700
+    page.window.min_width = 430
+    page.window.min_height = 600
     page.bgcolor = '#2a2a2a'
 
 
@@ -78,21 +78,21 @@ def main(page: ft.Page):
                     controls=[
                         ft.Container(
                             content=input_path,
-                            width=310,
                             height=40,
                             bgcolor='#1c1c1c',
                             alignment=ft.alignment.center_left,
                             border_radius=10,
-                            padding=ft.padding.only(left=5)
+                            padding=ft.padding.only(left=5),
+                            expand=62
                         ),
                         ft.ElevatedButton(
                             "select", 
                             style=ft.ButtonStyle(text_style=ft.TextStyle(size=24, weight=ft.FontWeight.BOLD)), 
                             on_click=lambda _: filepicker.pick_files("Select a files"), 
-                            width=120, 
                             height=40,
                             color="#f0f0f0",
-                            bgcolor='#1c1c1c'
+                            bgcolor='#1c1c1c',
+                            expand=24
                         ),
                         ft.IconButton(
                             icon=ft.Icons.CANCEL,
@@ -100,7 +100,8 @@ def main(page: ft.Page):
                             icon_color=ft.Colors.RED,
                             scale=1.5
                         )
-                    ]
+                    ],
+                    expand=True
                 ),
 
                 # Output directory input
@@ -108,21 +109,21 @@ def main(page: ft.Page):
                     controls=[
                         ft.Container(
                             content=output_directory,
-                            width=310,
                             height=40,
                             bgcolor='#1c1c1c',
                             alignment=ft.alignment.center_left,
                             border_radius=10,
-                            padding=ft.padding.only(left=5)
+                            padding=ft.padding.only(left=5),
+                            expand=62
                         ),
                         ft.ElevatedButton(
                             "select", 
                             style=ft.ButtonStyle(text_style=ft.TextStyle(size=24, weight=ft.FontWeight.BOLD)), 
                             on_click=lambda _: directorypicker.get_directory_path("Select a directory"), 
-                            width=120, 
                             height=40,
                             color='#f0f0f0',
-                            bgcolor='#1c1c1c'
+                            bgcolor='#1c1c1c',
+                            expand=24
                         ),
                         ft.IconButton(
                             icon=ft.Icons.CANCEL,
@@ -130,7 +131,8 @@ def main(page: ft.Page):
                             icon_color=ft.Colors.RED,
                             scale=1.5
                         )
-                    ]
+                    ],
+                    expand=True
                 ),
 
                 # Operations buttons
@@ -140,19 +142,19 @@ def main(page: ft.Page):
                                 "compress", 
                                 style=ft.ButtonStyle(text_style=ft.TextStyle(size=24, weight=ft.FontWeight.BOLD)), 
                                 on_click=lambda _: on_compress_click(input_path.value, f"{output_directory.value}/{input_file_name}"), 
-                                width=235, 
                                 height=50,
                                 color="#f0f0f0",
-                                bgcolor='#1c1c1c'
+                                bgcolor='#1c1c1c',
+                                expand=47
                         ),
                         ft.ElevatedButton(
                                 "decompress", 
                                 style=ft.ButtonStyle(text_style=ft.TextStyle(size=24, weight=ft.FontWeight.BOLD)), 
                                 on_click=lambda _: on_decompress_click(input_path.value, f"{output_directory.value}/{input_file_name}"), 
-                                width=235, 
                                 height=50,
                                 color="#f0f0f0",
-                                bgcolor='#1c1c1c'
+                                bgcolor='#1c1c1c',
+                                expand=47
                         )
                     ]
                 ),
