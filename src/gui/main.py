@@ -9,7 +9,6 @@ def main(page: ft.Page):
     page.window.min_height = 600
     page.bgcolor = '#2a2a2a'
 
-
     def on_compress_click(input_path: str, output_directory: str):
         compressor.compress_file(input_path, output_directory)
     
@@ -50,8 +49,18 @@ def main(page: ft.Page):
         ft.Column(
             controls=[
                 # Header
-                ft.Container(
-                    content=ft.Text("Abyss compressor", size=34, weight=ft.FontWeight.W_900)
+                ft.Row(
+                    controls=[
+                        ft.Image(
+                                src="assets/IconImage.jpg",
+                                width=60,
+                                height=60,
+                                scale=3
+                        ),
+                        ft.Container(
+                            content=ft.Text("Abyss compressor", size=40, weight=ft.FontWeight.W_900)
+                        )
+                    ]
                 ),
 
                 # Header divider
