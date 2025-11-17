@@ -82,10 +82,10 @@ class Compressor:
             # File compression
             compress_file = self._rle_compress(file_data, file_size)
 
-            # Write the original data if compression is ineffectictive
-            if compress_file.size >= file_size:
-                self._create_header(f'{compress_path}.tar.aby', file_size, crc32_data, False)
-                with open(f'{compress_path}.tar.aby', 'ab') as file:
+            # Write the original data if compression is ineffectictive or
+            if compress_file.size >= file_size or not compress_it:
+                self._create_header(f"{compress_path}.tar.aby", file_size, crc32_data, False)
+                with open(f"{compress_path}.tar.aby", "ab") as file:
                     file.write(file_data)
 
                 return 1
