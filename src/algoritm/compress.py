@@ -71,7 +71,7 @@ class Compressor:
         except Exception as e:
             return f"Error: {e}"
     
-    def compress_file(self, file_path: str, compress_path: str):
+    def compress_file(self, file_path: str, compress_path: str, compress_it: bool = True):
         try:
             # Getting the file size
             file_size = path.getsize(file_path)
@@ -84,8 +84,8 @@ class Compressor:
 
             # Write the original data if compression is ineffectictive
             if compress_file.size >= file_size:
-                self._create_header(f"{compress_path}.tar.aby", file_size, crc32_data, False)
-                with open(f"{compress_path}.tar.aby", "ab") as file:
+                self._create_header(f'{compress_path}.tar.aby', file_size, crc32_data, False)
+                with open(f'{compress_path}.tar.aby', 'ab') as file:
                     file.write(file_data)
 
                 return 1
