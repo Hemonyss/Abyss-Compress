@@ -9,8 +9,12 @@ def main(page: ft.Page):
     page.window.min_height = 600
     page.bgcolor = '#2a2a2a'
 
+    input_file_name = ""
+    compress_it = False
+
+
     def on_compress_click(input_path: str, output_directory: str):
-        compressor.compress_file(input_path, output_directory)
+        compressor.compress_file(input_path, output_directory, compress_it)
     
     def on_decompress_click(input_path: str, output_directory: str):
         decompressor.decompress_file(input_path, output_directory)
@@ -35,13 +39,17 @@ def main(page: ft.Page):
         if data.path:
             output_directory.value = data.path
         page.update()
+    
+    def compress_change():
+        nonlocal compress_it
+        compress_it = not compress_it
 
     filepicker = ft.FilePicker(on_result=on_filepicker_input)
     directorypicker = ft.FilePicker(on_result=on_filepicker_output)
     page.overlay.extend([filepicker, directorypicker])
     page.update()
 
-    input_file_name = ""
+    
     input_path = ft.Text("Select a file to compress", size=22, no_wrap=True, color='#f0f0f0')
     output_directory = ft.Text("Select a output directory", size=22, no_wrap=True, color='#f0f0f0')
 
@@ -189,7 +197,15 @@ def main(page: ft.Page):
                 # Settings
                 ft.Column(
                     controls=[
-                        ft.Text("In development", size=22)
+                        ft.Row(
+                            controls=[
+                                ft.Checkbox(
+                                    label="Compress",
+                                    height=50,
+                                    on_change=lambda _: compress_change()
+                                )
+                            ]
+                        )
                     ]
                 )
             ],
