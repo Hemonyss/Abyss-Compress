@@ -32,7 +32,7 @@ def main(page: ft.Page):
         if data.files:
             for file in data.files:
                 input_path.value = file.path
-                input_file_name = file.name
+                input_file_name = file.name.rsplit('.tar.aby', 1)[0]
         page.update()
     
     def on_filepicker_output(data: ft.FilePickerResultEvent):
