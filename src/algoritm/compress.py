@@ -1,6 +1,6 @@
 from numpy.typing import NDArray
 from numba import njit
-from zlib import crc32
+from crc32c import crc32c
 from os import path
 import numpy as np
 
@@ -78,7 +78,7 @@ class Compressor:
             # Reading the file
             file_data = self._read_file(file_path)
             # Calculating the CRC32
-            crc32_data = crc32(file_data)
+            crc32_data = crc32c(file_data)
             # File compression
             compress_file = self._rle_compress(file_data, file_size)
 
