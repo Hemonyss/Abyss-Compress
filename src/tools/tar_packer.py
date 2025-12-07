@@ -18,7 +18,7 @@ def create_tar(file_paths: list | tuple | set | str) -> bytes:
     tar_bytes = buffer.getvalue()
     buffer.close()
 
-    return tar_bytes
+    return frombuffer(tar_bytes, dtype=uint8)
 
 def read_tar(tar_bytes: bytes) -> dict:
     buffer = BytesIO(tar_bytes)
@@ -30,7 +30,7 @@ def read_tar(tar_bytes: bytes) -> dict:
             if not member_data:
                 return file_dict
             
-            file_dict[member.name] = frombuffer(member_data, dtype=uint8)
+            file_dict[member.name] = member_data
     
     buffer.close()
     
