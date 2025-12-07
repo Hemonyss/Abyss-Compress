@@ -1,4 +1,5 @@
 from numpy.typing import NDArray
+from src.tools import *
 from numba import njit
 from crc32c import crc32c
 from os import path
@@ -71,12 +72,17 @@ class Compressor:
         except Exception as e:
             return f"Error: {e}"
     
-    def compress_file(self, file_path: str, compress_path: str, compress_it: bool = True):
+    def compress_file(self, file_path: list | tuple | set | str, compress_path: str, compress_it: bool = True):
+        """str only if there is one path"""
         try:
+            # Create output path
+            compress_path = f"{compress_path}.tar.aby"
             # Getting the file size
-            file_size = path.getsize(file_path)
-            # Reading the file
-            file_data = self._read_file(file_path)
+            file_size = 0
+            for file in file_path:
+                file_size += path.getsize(file)
+            # Create tar in memmory
+            file_data = tar_packer.create_tar(file_path)
             # Calculating the CRC32
             crc32_data = crc32c(file_data)
             # File compression
@@ -84,15 +90,15 @@ class Compressor:
 
             # Write the original data if compression is ineffectictive or
             if compress_file.size >= file_size or not compress_it:
-                self._create_header(f"{compress_path}.tar.aby", file_size, crc32_data, False)
-                with open(f"{compress_path}.tar.aby", "ab") as file:
+                self._create_header(compress_path, file_size, crc32_data, False)
+                with open(f"{compress_path}", "ab") as file:
                     file.write(file_data)
 
-                return 1
+                return
 
             # Writing the header and data
-            self._create_header(f"{compress_path}.tar.aby", file_size, crc32_data, True)
-            with open(f"{compress_path}.tar.aby", "ab") as file:
+            self._create_header(compress_path, file_size, crc32_data, True)
+            with open(f"{compress_path}", "ab") as file:
                 file.write(compress_file)
 
         except Exception as e:
