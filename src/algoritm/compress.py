@@ -80,14 +80,13 @@ class Compressor:
             # validate file_path type
             if isinstance(file_path, str):
                 file_path = [file_path]
-            # Getting the file size
-            file_size = 0
-            for file in file_path:
-                file_size += path.getsize(file)
+            
             # Create tar in memmory
             file_data = tar_packer.create_tar(file_path)
+            # Getting the file size
+            file_size = file_data.size
             # Calculating the CRC32
-            crc32_data = crc32c(file_data)
+            crc32_data = crc32c(file_data.tobytes())
             # File compression
             compress_file = self._rle_compress(file_data, file_size)
 
