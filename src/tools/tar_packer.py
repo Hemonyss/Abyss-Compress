@@ -1,9 +1,10 @@
 from pathlib import Path
 from io import BytesIO
 from numpy import frombuffer, uint8
+from numpy.typing import NDArray
 import tarfile
 
-def create_tar(file_paths: list | tuple | set | str) -> bytes: 
+def create_tar(file_paths: list | tuple | set | str) -> NDArray: 
     """str only if there is one path"""
     buffer = BytesIO()
 
