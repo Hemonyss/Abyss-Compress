@@ -77,6 +77,9 @@ class Compressor:
         try:
             # Create output path
             compress_path = f"{compress_path}.tar.aby"
+            # validate file_path type
+            if isinstance(file_path, str):
+                file_path = [file_path]
             # Getting the file size
             file_size = 0
             for file in file_path:
