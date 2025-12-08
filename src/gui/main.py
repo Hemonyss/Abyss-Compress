@@ -14,13 +14,14 @@ def main(page: ft.Page):
 
 
     def on_compress_click(input_path: str, output_directory: str):
-        print(compressor.compress_file(input_path, output_directory, compress_it))
+        compressor.compress_file(input_path, output_directory, compress_it)
     
     def on_decompress_click(input_path: str, output_directory: str):
-        print(decompressor.decompress_file(input_path[0], output_directory))
+        decompressor.decompress_file(input_path[0], output_directory)
 
     def on_input_close():
         input_path.value = "Select a file to compress"
+        input_file_paths = []
         page.update()
     
     def on_output_close():
