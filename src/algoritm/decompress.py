@@ -1,7 +1,7 @@
 from numpy.typing import NDArray
 from numba import njit
 from os import path
-from zlib import crc32
+from crc32c import crc32c
 import numpy as np
 
 class Decompress:
@@ -97,7 +97,7 @@ class Decompress:
         # Decompressing a compress file
         decompress_data = self._decompress(compress_data, header_data[2])
         # Calculating rc32 for unpacked data
-        decompress_crc32 = crc32(decompress_data)
+        decompress_crc32 = crc32c(decompress_data)
 
         # Checking the correctness of unpacking
         if decompress_crc32 != header_data[3]:
@@ -115,3 +115,4 @@ decompressor = Decompress()
 
 # "Cold start" protection
 decompressor._decompress(np.array([0], dtype=np.uint8), 1)
+decompressor.decompress_file('/home/Hemonyss/qemu.tar.aby', '/home/Hemonyss/qemu')
