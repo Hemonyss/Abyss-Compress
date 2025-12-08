@@ -9,15 +9,15 @@ def main(page: ft.Page):
     page.window.min_height = 600
     page.bgcolor = '#2a2a2a'
 
-    input_file_name = ""
+    input_file_paths = []
     compress_it = False
 
 
     def on_compress_click(input_path: str, output_directory: str):
-        compressor.compress_file(input_path, output_directory, compress_it)
+        print(compressor.compress_file(input_path, output_directory, compress_it))
     
     def on_decompress_click(input_path: str, output_directory: str):
-        decompressor.decompress_file(input_path, output_directory)
+        print(decompressor.decompress_file(input_path[0], output_directory))
 
     def on_input_close():
         input_path.value = "Select a file to compress"
@@ -28,11 +28,11 @@ def main(page: ft.Page):
         page.update()
     
     def on_filepicker_input(data: ft.FilePickerResultEvent):
-        nonlocal input_file_name
+        nonlocal input_file_paths
         if data.files:
             for file in data.files:
-                input_path.value = file.path
-                input_file_name = file.name.rsplit('.tar.aby', 1)[0]
+                input_path.value = input_file_paths
+                input_file_paths.append(file.path)
         page.update()
     
     def on_filepicker_output(data: ft.FilePickerResultEvent):
@@ -105,7 +105,7 @@ def main(page: ft.Page):
                         ft.ElevatedButton(
                             "select", 
                             style=ft.ButtonStyle(text_style=ft.TextStyle(size=24, weight=ft.FontWeight.BOLD)), 
-                            on_click=lambda _: filepicker.pick_files("Select a files"), 
+                            on_click=lambda _: filepicker.pick_files("Select a files", allow_multiple=True), 
                             height=40,
                             color="#f0f0f0",
                             bgcolor='#1c1c1c',
@@ -136,7 +136,7 @@ def main(page: ft.Page):
                         ft.ElevatedButton(
                             "select", 
                             style=ft.ButtonStyle(text_style=ft.TextStyle(size=24, weight=ft.FontWeight.BOLD)), 
-                            on_click=lambda _: directorypicker.get_directory_path("Select a directory"), 
+                            on_click=lambda _: directorypicker.save_file("Select a directory"), 
                             height=40,
                             color='#f0f0f0',
                             bgcolor='#1c1c1c',
@@ -158,7 +158,7 @@ def main(page: ft.Page):
                         ft.ElevatedButton(
                                 "compress", 
                                 style=ft.ButtonStyle(text_style=ft.TextStyle(size=24, weight=ft.FontWeight.BOLD)), 
-                                on_click=lambda _: on_compress_click(input_path.value, f"{output_directory.value}/{input_file_name}"), 
+                                on_click=lambda _: on_compress_click(input_path.value, f"{output_directory.value}"), 
                                 height=50,
                                 color="#f0f0f0",
                                 bgcolor='#1c1c1c',
@@ -167,7 +167,7 @@ def main(page: ft.Page):
                         ft.ElevatedButton(
                                 "decompress", 
                                 style=ft.ButtonStyle(text_style=ft.TextStyle(size=24, weight=ft.FontWeight.BOLD)), 
-                                on_click=lambda _: on_decompress_click(input_path.value, f"{output_directory.value}/{input_file_name}"), 
+                                on_click=lambda _: on_decompress_click(input_path.value, f"{output_directory.value}"), 
                                 height=50,
                                 color="#f0f0f0",
                                 bgcolor='#1c1c1c',
