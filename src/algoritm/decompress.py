@@ -115,4 +115,3 @@ decompressor = Decompress()
 
 # "Cold start" protection
 decompressor._decompress(np.array([0], dtype=np.uint8), 1)
-decompressor.decompress_file('/home/Hemonyss/qemu.tar.aby', '/home/Hemonyss/qemu')
