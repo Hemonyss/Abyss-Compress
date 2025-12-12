@@ -3,7 +3,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include "../include/files_io.h"
 
 void* read_file(const char *filename, size_t* size) {
